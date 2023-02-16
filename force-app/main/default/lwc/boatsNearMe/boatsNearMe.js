@@ -53,11 +53,6 @@ export default class BoatsNearMe extends LightningElement {
     // Gets the location from the Browser
     // position => {latitude and longitude}
     getLocationFromBrowser() {
-        const options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-        }
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
