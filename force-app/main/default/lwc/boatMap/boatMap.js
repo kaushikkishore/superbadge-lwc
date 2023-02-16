@@ -6,8 +6,7 @@ import BOATMC from '@salesforce/messageChannel/BoatMessageChannel__c';
 import {
   APPLICATION_SCOPE,
   MessageContext,
-  subscribe,
-  unsubscribe
+  subscribe
 } from "lightning/messageService";
 
 import { getRecord } from 'lightning/uiRecordApi';
@@ -18,6 +17,10 @@ const LONGITUDE_FIELD = "Boat__c.Geolocation__Longitude__s";
 const LATITUDE_FIELD = "Boat__c.Geolocation__Latitude__s";
 // Declare the const BOAT_FIELDS as a list of [LONGITUDE_FIELD, LATITUDE_FIELD];
 const BOAT_FIELDS = [LONGITUDE_FIELD, LATITUDE_FIELD];
+
+
+// import { createMessageContext } from 'lightning/messageService';
+
 
 
 export default class BoatMap extends LightningElement {
@@ -39,42 +42,12 @@ export default class BoatMap extends LightningElement {
     this.boatId = value;
   }
 
-  error = undefined;
-  mapMarkers = [];
+  @api error = undefined;
+  @api mapMarkers = [];
 
   // Initialize messageContext for Message Service
   @wire(MessageContext)
   messageContext;
-
-  receivedMessage;
-  channelSubscription;
-
-
-  connectedCallback() {
-    this.subscribeMessage();
-  }
-
-  subscribeMessage() {
-    this.channelSubscription = subscribe(
-      this.messageContext,
-      BOATMC,
-      (message) => {
-        this.handleIncomingMessage(message);
-      },
-      { scope: APPLICATION_SCOPE }
-    );
-  }
-
-  handleIncomingMessage(message) {
-    this.boatId = message.recordId.value
-      ? message.recordId.value
-      : null;
-  }
-
-  unsubscribbeMessage() {
-    unsubscribe(this.channelSubscription);
-    this.channelSubscription = null;
-  }
 
   // Getting record's location to construct map markers using recordId
   // Wire the getRecord method using ('$boatId')
@@ -85,6 +58,7 @@ export default class BoatMap extends LightningElement {
       this.error = undefined;
       const longitude = data.fields.Geolocation__Longitude__s.value;
       const latitude = data.fields.Geolocation__Latitude__s.value;
+      console.log(`Got long:${longitude} lat:${latitude}`)
       this.updateMap(longitude, latitude);
     } else if (error) {
       this.error = error;
@@ -97,6 +71,7 @@ export default class BoatMap extends LightningElement {
   subscribeMC() {
     // recordId is populated on Record Pages, and this component
     // should not update when this component is on a record page.
+    console.log(`Invoking subscribe`, this.subscription, this.recordId);
     if (this.subscription || this.recordId) {
       return;
     }
@@ -106,6 +81,7 @@ export default class BoatMap extends LightningElement {
       BOATMC,
       (message) => {
         this.boatId = message.recordId
+        console.log(`Boat ID for the subscription is ${this.boatId}`);
       },
       { scope: APPLICATION_SCOPE }
     );
