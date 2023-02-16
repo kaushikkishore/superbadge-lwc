@@ -1,19 +1,22 @@
 import { LightningElement } from 'lwc';
 
+
 export default class BoatSearch extends LightningElement {
     isLoading = false;
 
     handleLoading() {
-        console.log(`Handle loading`);
+
         this.isLoading = true;
+        console.log(`Handle loading...`);
     }
 
     handleDoneLoading() {
-        console.log(`Handle done loading`);
         this.isLoading = false;
+        console.log(`Handle done loading`);
     }
 
     searchBoats(event) {
+        const boatTypeId = event.detail.boatTypeId;
         console.log(`Invoked search boats`);
     }
 

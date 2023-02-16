@@ -1,18 +1,17 @@
 import { api, LightningElement, wire } from 'lwc';
 import { publish, MessageContext } from 'lightning/messageService';
-import { ShowToastEvent } from 'lightning/platformShowToastEvents';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import getBoats from '@salesforce/apex/BoatDataService.getBoats';
 import updateBoatList from '@salesforce/apex/BoatDataService.updateBoatList';
 import BOATMC from '@salesforce/messageChannel/BoatMessageChannel__c';
 
-
+// APPLICATION CONSTANTS
 const SUCCESS_TITLE = 'Success';
 const MESSAGE_SHIP_IT = 'Ship it!';
 const SUCCESS_VARIANT = 'success';
 const ERROR_TITLE = 'Error';
 const ERROR_VARIANT = 'error';
-
 
 export default class BoatSearchResults extends LightningElement {
 
@@ -41,7 +40,7 @@ export default class BoatSearchResults extends LightningElement {
     }
 
     @wire(getBoats, { boatTypeId: '$boatTypeId' })
-    wireBoats({ data, error }) {
+    wiredBoats({ data, error }) {
         if (data) {
             console.log(`Get boats by filter id`);
             console.log(data);
@@ -79,25 +78,89 @@ export default class BoatSearchResults extends LightningElement {
         this.notifyLoading(this.isLoading);
     }
 
+    // this function must update selectedBoatId and call sendMessageService
     updateSelectedTile(event) {
         this.selectedBoatId = event.detail.boatId;
         this.sendMessageService(this.selectedBoatId);
+        console.log(`This is update selected tile information ${JSON.stringify(event.detail)}`);
     }
 
-    // Publish the selected boat ID 
+    // Publishes the selected boat Id on the BoatMC.
     sendMessageService(boatId) {
         // Publish the message
         publish(this.messageContext, BOATMC, { recordId: boatId });
     }
 
-    // Save the information 
-    async handleSave(event) {
-        const draftFieldValues = event.detail.draftValues;
+    // Save the information     
+    // handleSave(event) {
+    //     const updatedFields = event.detail.draftValues;
 
-        try {
-            const result = await updateBoatList({ data: draftFieldValues });
-            if (result === 'Success: Boats updated successfully') {
-                // Show success toast event 
+    //     /*
+    //     try {
+    //         const result = await updateBoatList({ data: draftFieldValues });
+    //         if (result === 'Success: Boats updated successfully') {
+    //             // Show success toast event 
+    //             const toast = new ShowToastEvent({
+    //                 title: SUCCESS_TITLE,
+    //                 message: MESSAGE_SHIP_IT,
+    //                 variant: SUCCESS_VARIANT,
+    //             });
+    //             this.dispatchEvent(toast);
+    //             this.draftValues = [];
+    //             return this.refresh();
+    //         } else {
+    //             // show error toast event 
+    //             const toast = new ShowToastEvent({
+    //                 title: ERROR_TITLE,
+    //                 message: error.message,
+    //                 variant: ERROR_VARIANT,
+    //             });
+    //             this.dispatchEvent(toast);
+    //         }
+    //     } catch (e) {
+    //         // show error toast event here also. 
+    //         const toast = new ShowToastEvent({
+    //             title: ERROR_TITLE,
+    //             message: error.message,
+    //             variant: ERROR_VARIANT,
+    //         });
+    //         this.dispatchEvent(toast);
+    //     }
+    //     */
+
+    //     // Update the records via Apex
+    //     updateBoatList({ data: updatedFields })
+    //         .then(result => {
+    //             const toast = new ShowToastEvent({
+    //                 title: SUCCESS_TITLE,
+    //                 message: MESSAGE_SHIP_IT,
+    //                 variant: SUCCESS_VARIANT,
+    //             });
+    //             this.dispatchEvent(toast);
+    //             this.draftValues = [];
+    //             return this.refresh();
+    //         })
+    //         .catch(error => {
+    //             const toast = new ShowToastEvent({
+    //                 title: ERROR_TITLE,
+    //                 message: error.message,
+    //                 variant: ERROR_VARIANT,
+    //             });
+    //             this.dispatchEvent(toast);
+    //         }).finally(() => { });
+    // }
+
+    // The handleSave method must save the changes in the Boat Editor
+    // passing the updated fields from draftValues to the 
+    // Apex method updateBoatList(Object data).
+    // Show a toast message with the title
+    // clear lightning-datatable draft values
+    handleSave(event) {
+        // notify loading
+        const updatedFields = event.detail.draftValues;
+        // Update the records via Apex
+        updateBoatList({ data: updatedFields })
+            .then(() => {
                 const toast = new ShowToastEvent({
                     title: SUCCESS_TITLE,
                     message: MESSAGE_SHIP_IT,
@@ -106,23 +169,15 @@ export default class BoatSearchResults extends LightningElement {
                 this.dispatchEvent(toast);
                 this.draftValues = [];
                 return this.refresh();
-            } else {
-                // show error toast event 
+            })
+            .catch(error => {
                 const toast = new ShowToastEvent({
                     title: ERROR_TITLE,
                     message: error.message,
                     variant: ERROR_VARIANT,
                 });
                 this.dispatchEvent(toast);
-            }
-        } catch (e) {
-            // show error toast event here also. 
-            const toast = new ShowToastEvent({
-                title: ERROR_TITLE,
-                message: error.message,
-                variant: ERROR_VARIANT,
-            });
-            this.dispatchEvent(toast);
-        }
+            })
+            .finally(() => { });
     }
 }
