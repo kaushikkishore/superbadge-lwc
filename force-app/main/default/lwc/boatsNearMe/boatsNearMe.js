@@ -87,33 +87,4 @@ export default class BoatsNearMe extends LightningElement {
 
         this.mapMarkers = newMarkers;
     }
-
-    // success(pos) {
-    //     const crd = pos.coords;
-
-    //     console.log('Your current position is:');
-    //     console.log(`Latitude : ${crd.latitude}`);
-    //     console.log(`Longitude: ${crd.longitude}`);
-    //     console.log(`More or less ${crd.accuracy} meters.`);
-
-    //     this.latitude = crd.latitude;
-    //     this.longitude = crd.longitude;
-
-    //     this.isRendered = true;
-    // }
-
-    // error(err) {
-    //     console.warn(`ERROR(${err.code}): ${err.message}`);
-    //     this.isRendered = true;
-    // }
-
-    // showToast(variant, title, message) {
-    //     const event = new ShowToastEvent({
-    //         title,
-    //         message,
-    //         variant
-    //     });
-    //     this.dispatchEvent(event);
-    // }
-
 }
