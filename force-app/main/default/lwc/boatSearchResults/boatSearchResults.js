@@ -33,12 +33,6 @@ export default class BoatSearchResults extends LightningElement {
     @wire(MessageContext)
     messageContext;
 
-
-    connectedCallback() {
-        const loading = new CustomEvent('loading');
-        this.dispatchEvent(loading);
-    }
-
     @wire(getBoats, { boatTypeId: '$boatTypeId' })
     wiredBoats({ data, error }) {
         if (data) {
@@ -90,65 +84,6 @@ export default class BoatSearchResults extends LightningElement {
         // Publish the message
         publish(this.messageContext, BOATMC, { recordId: boatId });
     }
-
-    // Save the information     
-    // handleSave(event) {
-    //     const updatedFields = event.detail.draftValues;
-
-    //     /*
-    //     try {
-    //         const result = await updateBoatList({ data: draftFieldValues });
-    //         if (result === 'Success: Boats updated successfully') {
-    //             // Show success toast event 
-    //             const toast = new ShowToastEvent({
-    //                 title: SUCCESS_TITLE,
-    //                 message: MESSAGE_SHIP_IT,
-    //                 variant: SUCCESS_VARIANT,
-    //             });
-    //             this.dispatchEvent(toast);
-    //             this.draftValues = [];
-    //             return this.refresh();
-    //         } else {
-    //             // show error toast event 
-    //             const toast = new ShowToastEvent({
-    //                 title: ERROR_TITLE,
-    //                 message: error.message,
-    //                 variant: ERROR_VARIANT,
-    //             });
-    //             this.dispatchEvent(toast);
-    //         }
-    //     } catch (e) {
-    //         // show error toast event here also. 
-    //         const toast = new ShowToastEvent({
-    //             title: ERROR_TITLE,
-    //             message: error.message,
-    //             variant: ERROR_VARIANT,
-    //         });
-    //         this.dispatchEvent(toast);
-    //     }
-    //     */
-
-    //     // Update the records via Apex
-    //     updateBoatList({ data: updatedFields })
-    //         .then(result => {
-    //             const toast = new ShowToastEvent({
-    //                 title: SUCCESS_TITLE,
-    //                 message: MESSAGE_SHIP_IT,
-    //                 variant: SUCCESS_VARIANT,
-    //             });
-    //             this.dispatchEvent(toast);
-    //             this.draftValues = [];
-    //             return this.refresh();
-    //         })
-    //         .catch(error => {
-    //             const toast = new ShowToastEvent({
-    //                 title: ERROR_TITLE,
-    //                 message: error.message,
-    //                 variant: ERROR_VARIANT,
-    //             });
-    //             this.dispatchEvent(toast);
-    //         }).finally(() => { });
-    // }
 
     // The handleSave method must save the changes in the Boat Editor
     // passing the updated fields from draftValues to the 
