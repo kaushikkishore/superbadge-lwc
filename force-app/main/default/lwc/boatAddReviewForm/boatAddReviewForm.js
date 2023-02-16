@@ -27,13 +27,13 @@ export default class BoatAddReviewForm extends LightningElement {
     get recordId() {
         return this.boatId;
     }
+
     set recordId(value) {
-        console.log(`Setting board record ID ${value}`);
         //sets boatId attribute
         this.setAttribute('boatId', value);
         //sets boatId assignment
         this.boatId = value;
-
+        console.log(`Setting board record ID ${value}`);
     }
 
     // Gets user rating input from stars component
