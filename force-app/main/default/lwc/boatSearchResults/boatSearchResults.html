@@ -30,6 +30,7 @@
         </lightning-tab>
         <lightning-tab label="Boat Editor">
             <div class="slds-scrollable_y">
+                <!-- sldsValidatorIgnoreNextLine -->
                 <lightning-datatable key-field="Id" data={boats} onsave={handleSave} columns={columns}
                     draft-values={draftValues} hide-checkbox-column>
 
