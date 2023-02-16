@@ -2,6 +2,7 @@
 import { LightningElement, api } from 'lwc';
 import fivestar from "@salesforce/resourceUrl/fivestar";
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 
 // add constants here
 const EDITABLE_CLASS = 'c-rating';
