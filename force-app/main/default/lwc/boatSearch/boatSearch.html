@@ -5,10 +5,14 @@
         <lightning-layout-item size="12">
             <lightning-card title="Find a Boat">
                 <!-- Add a button here -->
+                <lightning-button label="New Boat" onclick={createNewBoat} slot="actions">
+
+                </lightning-button>
 
                 <!-- Boat search form -->
                 <p class="slds-var-p-horizontal_small">
                     <!-- boatSearchForm component goes here -->
+                    <c-boat-search-form onsearch={searchBoats}></c-boat-search-form>
                 </p>
             </lightning-card>
         </lightning-layout-item>
@@ -18,18 +22,13 @@
 
             <!-- Spinner goes here -->
             <template if:true={isLoading}>
-                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                <lightning-spinner alternative-text="Loading" variant="brand" size="large"></lightning-spinner>
             </template>
-
             <!-- boatSearchResults goes here -->
-
-
-
             <!-- onloading={handleLoading} ondoneloading={handleDoneLoading} -->
+            <c-boat-search-results onloading={handleLoading} ondoneloading={handleDoneLoading}>
 
-            <lightning-card title="Boats">
-
-            </lightning-card>
+            </c-boat-search-results>
         </lightning-layout-item>
     </lightning-layout>
 </template>
