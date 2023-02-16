@@ -49,7 +49,7 @@ export default class SimilarBoats extends NavigationMixin(LightningElement) {
     // Navigate to record page
     openBoatDetailPage(event) {
         this[NavigationMixin.Navigate]({
-            type: 'standard_recordPage',
+            type: 'standard__recordPage',
             attributes: {
                 recordId: event.detail.boatId,
                 objectApiName: BOAT_OBJECT,
